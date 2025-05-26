@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="A fine-tuning framework to improve LLMs' strategic exploration and sequential decision making capabilities">
+  <meta name="keywords" content="LLM, Synthetic data, Multiturn finetuning">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>paprika</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation" style="background-color: #333; color: #fff;">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" style="color: #fff;">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="#abstract" style="color: #fff; border-bottom: 0px solid #fff;">
+        Abstract
+      </a>
+      <a class="navbar-item" href="#setup" style="color: #fff; border-bottom: 0px solid #fff;">
+        Problem Setup
+      </a>
+      <a class="navbar-item" href="#paprika" style="color: #fff; border-bottom: 0px solid #fff;">
+        PAPRIKA
+      </a>
+      <a class="navbar-item" href="#empirical" style="color: #fff; border-bottom: 0px solid #fff;">
+        Empirical Results
+      </a>
+      <a class="navbar-item" href="#BibTeX" style="color: #fff; border-bottom: 0px solid #fff;">
+        BibTeX
+      </a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Training a Generally Curious Agent</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>*1</sup>,</span>
+            <span class="author-block">
+              <a href="https://yidingjiang.github.io/">Yiding Jiang</a><sup>*1</sup>,</span>
+              <span class="author-block">
+              <a href="https://abitha-thankaraj.github.io/">Abitha Thankaraj</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/sumaitasr/">Sumaita Sadia Rahman</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://zicokolter.com/">J Zico Kolter</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://www.cs.cmu.edu/~rsalakhu/">Ruslan Salakhutdinov</a><sup>1</sup>
+            </span>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>*</sup>Equal Contribution</span>
+            <span class="author-block"><sup>1</sup>Carnegie Mellon University</span>
+            <span class="author-block"><sup>2</sup>North Carolina State University</span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              International Conference on Machine Learning (ICML), 2025 <span style="color: red;">(Spotlight)</span>
+            </span>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2502.17543"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/tajwarfahim/paprika"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/ftajwar/paprika_SFT_dataset"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-database"></i>
+                  </span>
+                  <span>SFT Dataset</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/datasets/ftajwar/paprika_preference_dataset"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-database"></i>
+                  </span>
+                  <span>Preference Dataset</span>
+                  </a>
+              </span>
+              <span class="link-block">
+                <a href="https://huggingface.co/ftajwar/paprika_Meta-Llama-3.1-8B-Instruct"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-cogs"></i>
+                  </span>
+                  <span>Model</span>
+                  </a>
+              </span>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/final_picture_teaser.png"
+        alt="Teaser image."
+        class="teaser-image"/>
+      <h2 class="subtitle has-text-centered">
+        <b>(Overview of PAPRIKA)</b> We design a diverse set of tasks where an LLM agent needs strategic information gathering to succeed, 
+        then train an LLM on self-generated data to prefer higher performing trajectories. The resulting behavior learned by PAPRIKA 
+        can transfer zero-shot to unseen tasks, showcasing its potential to build general decision making agents.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3" id="abstract">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Efficient exploration is essential for intelligent systems interacting with their environment, but 
+            existing language models often fall short in scenarios that require strategic information gathering. 
+            In this paper, we present <b>PAPRIKA</b>, a fine-tuning approach that enables language models to develop general 
+            decision-making capabilities that are not confined to particular environments. By training on synthetic 
+            interaction data from different tasks that require diverse strategies, <b>PAPRIKA</b> teaches models to explore and 
+            adapt their behavior on a new task based on environment feedback in-context without more gradient updates. 
+            Experimental results show that models fine-tuned with <b>PAPRIKA</b> can effectively transfer their learned 
+            decision-making capabilities to entirely unseen tasks without additional training. Unlike traditional training, 
+            our approach's primary bottleneck lies in sampling useful interaction data instead of model updates. 
+            To improve sample efficiency, we propose a curriculum learning strategy that prioritizes sampling trajectories 
+            from tasks with high learning potential. These results suggest a promising path towards AI systems that can 
+            autonomously solve novel sequential decision-making problems that require interactions with the external world.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  <hr>
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+
+        <h2 class="title is-3" id="setup">Problem Setting</h2>
+        <div class="content has-text-justified">
+          <p>
+            The goal of our paper is to develop a scalable method to instill better strategic exploration and sequential decision-making capabilities into LLMs. 
+            Prior works (<a href="https://arxiv.org/abs/2310.07064">Krishnamurthy et al., 2024</a>) have shown that LLMs can perform poorly on even the simple decision making task of multi-armed bandits. 
+            <a href="https://arxiv.org/abs/2410.06238">Nie et al., 2024</a> has since then demonstrated that LLMs can be taught to perform better on bandits after fine-tuning them on synthetic trajectories 
+            generated by known algorithms such as UCB. However, this idea is limited in scope for three reasons:
+          </p>
+          <ul>
+            <li><b>(1)</b> We want LLMs to perform strategic exploration and decision making in more complex settings</li>
+            <li><b>(2)</b> For most tasks, there is no known algorithm like UCB to generate good synthetic trajectories from</li>
+            <li><b>(3)</b> It can be infeasible to collect data for all tasks that we care about</li>
+          </ul>
+        </div>
+
+        <h2 class="title is-3" id="paprika">PAPRIKA</h2>
+        <div class="content has-text-justified">
+          PAPRIKA aims to solve the above problems. First, we design a suite of complex decision-making tasks that require strategic information gathering to succeed. Next, we show that in the absence of known good algorithms, existing LLMs can generate trajectories with better decision making behaviors through diversity-encouraging sampling. We then finetune the LLMs to prefer higher performing trajectories (in a fashion similar to <a href="https://arxiv.org/abs/2203.14465">STaR</a>) and show that this leads to better decision making abilities at test-time. More importantly, <b>these behaviors often generalize to unseen task groups without additional training</b>. Finally, we propose a general curriculum learning algorithm that can dynamically choose which subset of tasks to train on next to improve data efficiency of such training methods. We next describe each component of PAPRIKA.
+        </div>
+
+        <center>
+          <img src="./static/images/paprika_overview.png"
+            width="90%"
+            alt="paprika_task_groups"
+            class="paprika_task_groups"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-centered">
+            <p>
+              <b>(Main Components of PAPRIKA)</b> The PAPRIKA framework consists of task construction, task selection, generating good exploration behavior via diversity encouraging sampling from an LLM, and finally training the LLM on self-generated trajectories that attained high scores.
+            </p>
+          </div>
+        </div>
+        
+        <h3 class="title is-4">Task Design</h3>
+        <div class="content has-text-justified">
+          <!-- Create Bullet Point List to Summarize -->
+          To both evaluate and then train LLMs, we design 10 diverse textual task groups, each of which comprises of partially observable tasks that require multiturn interaction with the task environment, strategic exploration and good sequential decision making abilities for an agent to succeed at them. Below is a summary of these task groups.
+        </div>
+
+        <center>
+          <img src="./static/images/paprika_task_groups.png"
+            width="90%"
+            alt="paprika_task_groups"
+            class="paprika_task_groups"/>
+        </center>
+
+        <div class="content has-text-justified">
+          We generate 20 samples per each task in the training split, then collected all the successful trajectories to form our supervised fine-tuning dataset. Next, we took the best trajectory per task (successful and achieved success with the fewest number of turns) and one of the lower scoring trajectories (unsuccessful or successful but with a significantly more number of turns) to form a preference pair. Ultimately, we end up with 17,181 SFT trajectories and 5260 trajectory preference pairs.
+        </div>
+
+        <h3 class="title is-4">Optimization</h3>
+        <div class="content has-text-justified">
+          <!-- Create Bullet Point List to Summarize -->
+          We use a multiturn variant of supervised fine-tuning (SFT) and Direct Preference Optimization (<a href="https://arxiv.org/abs/2305.18290">DPO</a>) to fine-tune our models, where log probabilities are calculated autoregressively over the entire trajectory, but then
+          only the log probabilities of the agent generated tokens are considered for calculating the training loss. In practice, we first run supervised finetuning, and then use the sum of SFT and DPO (similar to <a href="https://arxiv.org/abs/2404.19733">RPO</a>) losses to optimize our LLMs.
+        </div>
+
+        <center>
+          <img src="./static/images/optimization_objective.png"
+            width="40%"
+            alt="optimization_objective"
+            class="optimization_objective"/>
+        </center>
+
+        <h3 class="title is-4">Scalable Online Curriculum Learning Algorithm</h3>
+        <div class="content has-text-justified">
+          PAPRIKA's primary bottleneck lies in generating training trajectories, rather than model updates. So it is crucial that we generate more rollouts on tasks that have high learning potential. 
+        </div>
+
+        <div class="content has-text-justified">
+          However, it is hard to know which tasks would have high learning potential without generating rollouts first. To make progress, we make the additional assumption that similar tasks have similar learning potential, and that we have task similarity groups over our set of all tasks. Next, we use the coefficient of variation as a metric for measuring learning potential. Given a task group, we can sample one task from it, generate multiple trajectories for this task to calculate the coefficient of variation (COV) (over number of turns, which we use as a proxy for reward). We can then use this task COV to update our estimate of the task group's COV distribution, which can tell us which task group to sample from next if we want to maximize the COV of our sampled tasks.
+        </div>
+
+        <center>
+          <img src="./static/images/coefficient_of_variation.png"
+            width="50%"
+            alt="learning_potential"
+            class="learning_potential"/>
+        </center>
+
+        <div class="content has-text-justified">
+          Formally, once we have metric for measuring learning potential, we naturally want to maximize the learning potential of our sampled dataset, and we can treat this as multi-armed bandit (MAB) problem, for which we can employ the Upper Confidence Bound (UCB) algorithm to sample tasks from the collection of task groups. 
+        </div>
+
+        <center>
+          <img src="./static/images/task_selection_with_UCB.png"
+            width="50%"
+            alt="curriculum_algorithm"
+            class="curriculum_algorithm"/>
+        </center>
+        
+
+        <h2 class="title is-3" id="empirical">Empirical Results</h2>
+
+        <!-- Interpolating. -->
+        <h3 class="title is-4">PAPRIKA improves LLM decision making abilties</h3>
+        Training on 10 diverse tasks groups result in performance improvement on heldout tasks from each group.
+        
+        <center>
+          <img src="./static/images/paprika_success_rate.png"
+            alt="paprika_success_rate"
+            width="90%"
+            class="paprika_success_rate"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-centered">
+            <p>
+              <b>(PAPRIKA improves success rate on a diverse range of task groups)</b> Average success rate on 6 representative task groups, with shaded areas representing standard error over 3 random seeds. PAPRIKA improves performance on all of them after fine-tuning on only roughly 22,500 total trajectories.
+            </p>
+          </div>
+        </div>
+
+        <h3 class="title is-4">PAPRIKA can teach LLMs strategies that generalize zero-shot to a new task group</h3>
+
+        The next important question we study is whether the strategies learned by PAPRIKA can zero-shot transfer to entirely different groups of tasks. To do so, we perform a set of leave-one-out (LOO) experiments: we randomly choose one group (e.g., 20 questions) from our set of environments, train the LLM on trajectories generated from every other group, and test the resulting model's performance on the left-out group. Our results show that PAPRIKA (LOO) outperforms the starting model, Llama-3.1-8B-Instruct, in 6 representative task groups. This shows that the strategic exploration taught by PAPRIKA is not tied to a particular environment, and <b>scaling up the number of task groups in PAPRIKA can be a viable solution for teaching LLMs general in-context RL abilities</b>.
+        
+        <center>
+          <img src="./static/images/paprika_generalization.png"
+            alt="paprika_generalization"
+            width="90%"
+            class="paprika_generalization"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-centered">
+            <p>
+              <b>(Testing generalization of PAPRIKA via leave-one-out experiments)</b> We test PAPRIKA's zero-shot performance on unseen task groups by leave-one-out (LOO) experiments, where we train the LLM on trajectories from every task group except the group we test on. All evaluations are done at temperature 0.7 and we report <b>average success rate</b>. Our experiments demonstrate that PAPRIKA can teach an LLM sequential decision making abilities that often transfers well to new tasks without needing any additional training.
+            </p>
+          </div>
+        </div>
+  
+        <h3 class="title is-4">Curriculum Learning Can Improve PAPRIKA's Sample Complexity</h3>
+
+        We test our curriculum learning algorithm on 20 questions, using GPT-4o-mini defined easy, medium, and hard task group clustering of the hidden topics. Our curriculum outperforms uniform sampling over 3 rounds of iterative training in terms of both average and pass@4 success rate, showcasing its potential for improving the sample complexity of such methods, <b>potentially also working with Online RL</b>.
+
+        <center>
+          <img src="./static/images/paprika_curriculum.png"
+            alt="paprika_curriculum"
+            width="90%"
+            class="paprika_curriculum"/>
+        </center>
+        
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-justified">
+            <p>
+              <b>(Multi-round training with curriculum on twenty questions)</b> We demonstrate the efficacy of our curriculum learning algorithm for sampling training tasks by comparing its performance against uniform sampling for multi-round training. All evaluations are done at temperature 0.7, and shaded regions represent standard error over 3 seeds. (<b>Left</b>) Average success rate at each round. (<b>Middle</b>) Pass@4 success rate at each round. (<b>Right</b>) Success rate per each of easy, medium, and hard task groups. Overall, our curriculum learning algorithm shows 1.4% and 3.3% improvement over the uniform sampling baseline at average and pass@4 success rate respectively.
+            </p>
+          </div>
+        </div>
+
+        <h3 class="title is-4">Example Trajectories</h3>
+        
+        Here we list two example trajectories, one from the regular Llama-3.1-8B-Instruct model, and another from the PAPRIKA fine-tuned model, on the 20 questions task group. The hidden topic the agent has to guess is a <b>concept</b>, and the correct answer is <b>primary numbers</b>. We see qualitatively that PAPRIKA teaches the model to ask better quality questions.
+
+        <center>
+          <img src="./static/images/paprika_example_task_trajectories.png"
+            alt="paprika_example_task_trajectories"
+            width="70%"
+            class="paprika_example_task_trajectories"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-justified">
+            <p>
+              <b>(Qualitative analysis of behaviors taught by PAPRIKA)</b> PAPRIKA not only improves over the starting model in terms of success rate and other metrics, but also shows better sequential decision making abilities. Here we present two example trajectories on 20 questions, where the hidden topic the agent has to guess is a <b>concept</b>, and the correct answer is <b>primary numbers</b>. The PAPRIKA fine-tuned model asks much better quality questions and is able to guess the topic in 8 turns, whereas the regular instruct model cannot guess it after spending all 20 turns, in all 4 attempts that we ran (we only show first 9 turns for the sake of brevity).
+            </p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code> 
+      @misc{tajwar2025traininggenerallycuriousagent,
+        title={Training a Generally Curious Agent}, 
+        author={Fahim Tajwar and Yiding Jiang and Abitha Thankaraj and Sumaita Sadia Rahman and J Zico Kolter and Jeff Schneider and Ruslan Salakhutdinov},
+        year={2025},
+        eprint={2502.17543},
+        archivePrefix={arXiv},
+        primaryClass={cs.LG},
+        url={https://arxiv.org/abs/2502.17543}, 
+      }
+</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="https://arxiv.org/pdf/2502.17543">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/tajwarfahim/paprika" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <p>
+        Corresponding Author: <a href="mailto:ftajwar@cs.cmu.edu">Fahim Tajwar</a>.<br>
+        We thank the Nerfies Team for their <a href="https://github.com/nerfies/nerfies.github.io">website template</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
