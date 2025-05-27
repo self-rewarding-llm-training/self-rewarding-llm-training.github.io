@@ -1,17 +1,15 @@
-# Training a Generally Curious Agent
+# Can Large Reasoning Models Self-Train?
 
-This is the repository that contains source code for the [Training a Generally Curious Agent](https://paprika-llm.github.io/).
+This is the repository that contains source code for the paper ["Can Large Reasoning Models Self-Train?"](https://self-rewarding-llm-training.github.io/).
 
 If you find our paper useful for your work please cite:
+
 ```
-    @misc{tajwar2025traininggenerallycuriousagent,
-      title={Training a Generally Curious Agent}, 
-      author={Fahim Tajwar and Yiding Jiang and Abitha Thankaraj and Sumaita Sadia Rahman and J Zico Kolter and Jeff Schneider and Ruslan Salakhutdinov},
+    @misc{shafayat2025CanLargeReasoningModelsSelfTrain,
+      title={Can Large Reasoning Models Self-Train?}, 
+      author={Sheikh Shafayat and Fahim Tajwar and Ruslan Salakhutdinov and Jeff Schneider and Andrea Zanette},
       year={2025},
-      eprint={2502.17543},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG},
-      url={https://arxiv.org/abs/2502.17543}, 
+      url={https://self-rewarding-llm-training.github.io/}, 
     }
 ```
 

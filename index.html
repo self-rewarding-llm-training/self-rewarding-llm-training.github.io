@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="A fine-tuning framework to improve LLMs' strategic exploration and sequential decision making capabilities">
-  <meta name="keywords" content="LLM, Synthetic data, Multiturn finetuning">
+        content="A reinforcement learning framework where LLMs generate their own supervision signal via majority voting">
+  <meta name="keywords" content="LLM, Reasoning, Self-Improvement">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>paprika</title>
+  <title>srt</title>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
@@ -45,7 +45,7 @@
         Problem Setup
       </a>
       <a class="navbar-item" href="#paprika" style="color: #fff; border-bottom: 0px solid #fff;">
-        PAPRIKA
+        SRT
       </a>
       <a class="navbar-item" href="#empirical" style="color: #fff; border-bottom: 0px solid #fff;">
         Empirical Results
@@ -61,38 +61,29 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Training a Generally Curious Agent</h1>
+          <h1 class="title is-1 publication-title">Can Large Reasoning Models Self-Train?</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>*1</sup>,</span>
-            <span class="author-block">
-              <a href="https://yidingjiang.github.io/">Yiding Jiang</a><sup>*1</sup>,</span>
-              <span class="author-block">
-              <a href="https://abitha-thankaraj.github.io/">Abitha Thankaraj</a><sup>1</sup>,
+              <a href="https://sheikhshafayat.github.io/">Sheikh Shafayat</a><sup>*1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://www.linkedin.com/in/sumaitasr/">Sumaita Sadia Rahman</a><sup>2</sup>,
+              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>*2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://zicokolter.com/">J Zico Kolter</a><sup>1</sup>,
+              <a href="https://www.cs.cmu.edu/~rsalakhu/">Ruslan Salakhutdinov</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a><sup>1</sup>,
+              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://www.cs.cmu.edu/~rsalakhu/">Ruslan Salakhutdinov</a><sup>1</sup>
+              <a href="https://azanette.com">Andrea Zanette</a><sup>2</sup>
             </span>
 
           <div class="is-size-5 publication-authors">
             <span class="author-block"><sup>*</sup>Equal Contribution</span>
-            <span class="author-block"><sup>1</sup>Carnegie Mellon University</span>
-            <span class="author-block"><sup>2</sup>North Carolina State University</span>
+            <span class="author-block"><sup>1</sup>Independent Researcher</span>
+            <span class="author-block"><sup>2</sup>Carnegie Mellon University</span>
           </div>
-
-          <div class="is-size-5 publication-authors">
-            <span class="author-block">
-              International Conference on Machine Learning (ICML), 2025 <span style="color: red;">(Spotlight)</span>
-            </span>
 
           <div class="column has-text-centered">
             <div class="publication-links">
@@ -107,7 +98,7 @@
               </span>
               <!-- Code Link. -->
               <span class="link-block">
-                <a href="https://github.com/tajwarfahim/paprika"
+                <a href="https://github.com/tajwarfahim/srt"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
@@ -116,30 +107,12 @@
                   </a>
               </span>
               <span class="link-block">
-                <a href="https://huggingface.co/datasets/ftajwar/paprika_SFT_dataset"
+                <a href="https://huggingface.co/collections/ftajwar/self-rewarding-llm-training-6835218091832c3664176553"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-database"></i>
                   </span>
-                  <span>SFT Dataset</span>
-                  </a>
-              </span>
-              <span class="link-block">
-                <a href="https://huggingface.co/datasets/ftajwar/paprika_preference_dataset"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fas fa-database"></i>
-                  </span>
-                  <span>Preference Dataset</span>
-                  </a>
-              </span>
-              <span class="link-block">
-                <a href="https://huggingface.co/ftajwar/paprika_Meta-Llama-3.1-8B-Instruct"
-                   class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                      <i class="fas fa-cogs"></i>
-                  </span>
-                  <span>Model</span>
+                  <span>Datasets</span>
                   </a>
               </span>
 
