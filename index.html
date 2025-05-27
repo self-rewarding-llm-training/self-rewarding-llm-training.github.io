@@ -149,18 +149,19 @@
         <h2 class="title is-3" id="abstract">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Efficient exploration is essential for intelligent systems interacting with their environment, but 
-            existing language models often fall short in scenarios that require strategic information gathering. 
-            In this paper, we present <b>PAPRIKA</b>, a fine-tuning approach that enables language models to develop general 
-            decision-making capabilities that are not confined to particular environments. By training on synthetic 
-            interaction data from different tasks that require diverse strategies, <b>PAPRIKA</b> teaches models to explore and 
-            adapt their behavior on a new task based on environment feedback in-context without more gradient updates. 
-            Experimental results show that models fine-tuned with <b>PAPRIKA</b> can effectively transfer their learned 
-            decision-making capabilities to entirely unseen tasks without additional training. Unlike traditional training, 
-            our approach's primary bottleneck lies in sampling useful interaction data instead of model updates. 
-            To improve sample efficiency, we propose a curriculum learning strategy that prioritizes sampling trajectories 
-            from tasks with high learning potential. These results suggest a promising path towards AI systems that can 
-            autonomously solve novel sequential decision-making problems that require interactions with the external world.
+            Scaling the performance of large language models (LLMs) increasingly depends on 
+            methods that reduce reliance on human supervision. 
+            Reinforcement learning from automated verification offers an alternative, but it incurs scalability limitations 
+            due to dependency upon human-designed verifiers. Self-training, where the model’s own judgment provides the 
+            supervisory signal, presents a compelling direction. 
+            We propose an online self-training reinforcement learning algorithm that leverages the model’s self-consistency 
+            to infer correctness signals and train without any ground-truth supervision. 
+            We apply the algorithm to challenging mathematical reasoning tasks and show that it quickly reaches performance 
+            levels rivaling reinforcement-learning methods trained explicitly on gold-standard answers. 
+            Additionally, we analyze inherent limitations of the algorithm, highlighting how the self-generated proxy reward 
+            initially correlated with correctness can incentivize reward hacking, where confidently 
+            incorrect outputs are favored. Our results illustrate how self-supervised improvement can achieve significant performance 
+            gains without external labels, while also revealing its fundamental challenges.
           </p>
         </div>
       </div>
