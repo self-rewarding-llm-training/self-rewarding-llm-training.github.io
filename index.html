@@ -290,7 +290,7 @@
         <center>
           <img src="./static/images/srt_training_dynamics.png"
             alt="srt_training_dynamics"
-            width="90%"
+            width="100%"
             class="srt_training_dynamics"/>
         </center>
 
@@ -303,21 +303,47 @@
           </div>
         </div>
   
-        <h3 class="title is-4">Curriculum Learning Can Improve PAPRIKA's Sample Complexity</h3>
+        <h3 class="title is-4">SRT can be used for test-time training</h3>
 
-        We test our curriculum learning algorithm on 20 questions, using GPT-4o-mini defined easy, medium, and hard task group clustering of the hidden topics. Our curriculum outperforms uniform sampling over 3 rounds of iterative training in terms of both average and pass@4 success rate, showcasing its potential for improving the sample complexity of such methods, <b>potentially also working with Online RL</b>.
+        Since SRT does not require ground truth answers, one can also use our algorithm for test-time training ---
+        that is, given a test set, one can first run SRT on this set, and then make predictions. We
+        see that this can lead to minor
+        performance improvement on the test set.
 
         <center>
-          <img src="./static/images/paprika_curriculum.png"
-            alt="paprika_curriculum"
+          <img src="./static/images/srt_test_time_training.png"
+            alt="srt_test_time_training"
             width="90%"
-            class="paprika_curriculum"/>
+            class="srt_test_time_training"/>
         </center>
         
         <div class="box" style="background-color:aliceblue">
           <div class="content has-text-justified">
             <p>
-              <b>(Multi-round training with curriculum on twenty questions)</b> We demonstrate the efficacy of our curriculum learning algorithm for sampling training tasks by comparing its performance against uniform sampling for multi-round training. All evaluations are done at temperature 0.7, and shaded regions represent standard error over 3 seeds. (<b>Left</b>) Average success rate at each round. (<b>Middle</b>) Pass@4 success rate at each round. (<b>Right</b>) Success rate per each of easy, medium, and hard task groups. Overall, our curriculum learning algorithm shows 1.4% and 3.3% improvement over the uniform sampling baseline at average and pass@4 success rate respectively.
+              <b>(Test-Time Self-Training Performance)</b> Given the test dataset, 
+              one can perform SRT on this dataset before making predictions. Our results show that this 
+              improves the majority voting performance on the test set without access to ground truth labels.
+            </p>
+          </div>
+        </div>
+
+        Moreover, given the test dataset is small enough, SRT pseudo-reward can very quickly saturate.
+        This means very little learning signal is provided to the model throughout the rest of the training. As a result,
+        we observe very little reward hacking or performance collapse in the test-time training setup, compared to the regular setup.
+
+        <center>
+          <img src="./static/images/srt_test_time_training_dynamics.png"
+            alt="srt_test_time_training_dynamics"
+            width="90%"
+            class="srt_test_time_training_dynamics"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-justified">
+            <p>
+              <b>(Test-Time Self-Training Dynamics)</b> We apply test-time training on AIME 2024 and 
+              observe no performance collapse. However, SRT's performance quickly saturates (leftmost plot), 
+              and the pseudo-reward value (second plot) also approaches saturation.
             </p>
           </div>
         </div>
