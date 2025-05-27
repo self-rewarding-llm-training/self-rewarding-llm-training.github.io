@@ -128,13 +128,13 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img src="./static/images/final_picture_teaser.png"
+      <img src="./static/images/srt_teaser_figure.png"
         alt="Teaser image."
         class="teaser-image"/>
       <h2 class="subtitle has-text-centered">
-        <b>(Overview of PAPRIKA)</b> We design a diverse set of tasks where an LLM agent needs strategic information gathering to succeed, 
-        then train an LLM on self-generated data to prefer higher performing trajectories. The resulting behavior learned by PAPRIKA 
-        can transfer zero-shot to unseen tasks, showcasing its potential to build general decision making agents.
+        <b>(Overview of Self-Rewarding Training or SRT)</b> In Reinforcement Learning from Verifiable Reward (RLVR), one produces the reward for RL training using a ground truth verifier. 
+        Contrary to that, Self-Rewarding Training (SRT) does not assume access to a ground truth verifier; instead it uses majority voting 
+        from the model's own generations to estimate the ground truth, and use this proxy reward signal to train the model.
       </h2>
     </div>
   </div>
