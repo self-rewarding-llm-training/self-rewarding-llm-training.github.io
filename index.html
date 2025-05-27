@@ -233,71 +233,26 @@
             width="50%"
             alt="srt_algorithm"
             class="srt_algorithm"/>
-        </center>
-
-        <div class="content has-text-justified">
-          We generate 20 samples per each task in the training split, then collected all the successful trajectories to form our supervised fine-tuning dataset. Next, we took the best trajectory per task (successful and achieved success with the fewest number of turns) and one of the lower scoring trajectories (unsuccessful or successful but with a significantly more number of turns) to form a preference pair. Ultimately, we end up with 17,181 SFT trajectories and 5260 trajectory preference pairs.
-        </div>
-
-        <h3 class="title is-4">Optimization</h3>
-        <div class="content has-text-justified">
-          <!-- Create Bullet Point List to Summarize -->
-          We use a multiturn variant of supervised fine-tuning (SFT) and Direct Preference Optimization (<a href="https://arxiv.org/abs/2305.18290">DPO</a>) to fine-tune our models, where log probabilities are calculated autoregressively over the entire trajectory, but then
-          only the log probabilities of the agent generated tokens are considered for calculating the training loss. In practice, we first run supervised finetuning, and then use the sum of SFT and DPO (similar to <a href="https://arxiv.org/abs/2404.19733">RPO</a>) losses to optimize our LLMs.
-        </div>
-
-        <center>
-          <img src="./static/images/optimization_objective.png"
-            width="40%"
-            alt="optimization_objective"
-            class="optimization_objective"/>
-        </center>
-
-        <h3 class="title is-4">Scalable Online Curriculum Learning Algorithm</h3>
-        <div class="content has-text-justified">
-          PAPRIKA's primary bottleneck lies in generating training trajectories, rather than model updates. So it is crucial that we generate more rollouts on tasks that have high learning potential. 
-        </div>
-
-        <div class="content has-text-justified">
-          However, it is hard to know which tasks would have high learning potential without generating rollouts first. To make progress, we make the additional assumption that similar tasks have similar learning potential, and that we have task similarity groups over our set of all tasks. Next, we use the coefficient of variation as a metric for measuring learning potential. Given a task group, we can sample one task from it, generate multiple trajectories for this task to calculate the coefficient of variation (COV) (over number of turns, which we use as a proxy for reward). We can then use this task COV to update our estimate of the task group's COV distribution, which can tell us which task group to sample from next if we want to maximize the COV of our sampled tasks.
-        </div>
-
-        <center>
-          <img src="./static/images/coefficient_of_variation.png"
-            width="50%"
-            alt="learning_potential"
-            class="learning_potential"/>
-        </center>
-
-        <div class="content has-text-justified">
-          Formally, once we have metric for measuring learning potential, we naturally want to maximize the learning potential of our sampled dataset, and we can treat this as multi-armed bandit (MAB) problem, for which we can employ the Upper Confidence Bound (UCB) algorithm to sample tasks from the collection of task groups. 
-        </div>
-
-        <center>
-          <img src="./static/images/task_selection_with_UCB.png"
-            width="50%"
-            alt="curriculum_algorithm"
-            class="curriculum_algorithm"/>
-        </center>
-        
+        </center>        
 
         <h2 class="title is-3" id="empirical">Empirical Results</h2>
 
         <!-- Interpolating. -->
-        <h3 class="title is-4">PAPRIKA improves LLM decision making abilties</h3>
-        Training on 10 diverse tasks groups result in performance improvement on heldout tasks from each group.
+        <h3 class="title is-4">SRT leads to 100% relative improvement, but also suffers from performance collapse</h3>
         
         <center>
-          <img src="./static/images/paprika_success_rate.png"
-            alt="paprika_success_rate"
+          <img src="./static/images/self_training_performance.png"
+            alt="self_training_performance"
             width="90%"
-            class="paprika_success_rate"/>
+            class="self_training_performance"/>
         </center>
 
         <div class="box" style="background-color:aliceblue">
           <div class="content has-text-centered">
             <p>
-              <b>(PAPRIKA improves success rate on a diverse range of task groups)</b> Average success rate on 6 representative task groups, with shaded areas representing standard error over 3 random seeds. PAPRIKA improves performance on all of them after fine-tuning on only roughly 22,500 total trajectories.
+              <b>(Self-Training Performance)</b> Average over 3 heldout test dataset performance of SRT vs training with ground truth reward. 
+              Training for longer with SRT can lead to performance collapse, but at the peak, it leads to around 100\% performance improvement over the base model.
+              Earlier in the training, it leads to similar improvement as RL training with ground truth.
             </p>
           </div>
         </div>
