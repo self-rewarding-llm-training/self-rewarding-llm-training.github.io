@@ -251,27 +251,54 @@
           <div class="content has-text-centered">
             <p>
               <b>(Self-Training Performance)</b> Average over 3 heldout test dataset performance of SRT vs training with ground truth reward. 
-              Training for longer with SRT can lead to performance collapse, but at the peak, it leads to around 100\% performance improvement over the base model.
+              Training for longer with SRT can lead to performance collapse, but at the peak, it leads to around 100% performance improvement over the base model.
               Earlier in the training, it leads to similar improvement as RL training with ground truth.
             </p>
           </div>
         </div>
 
-        <h3 class="title is-4">PAPRIKA can teach LLMs strategies that generalize zero-shot to a new task group</h3>
+        <h3 class="title is-4">What happens after SRT peaks in performance?</h3>
 
-        The next important question we study is whether the strategies learned by PAPRIKA can zero-shot transfer to entirely different groups of tasks. To do so, we perform a set of leave-one-out (LOO) experiments: we randomly choose one group (e.g., 20 questions) from our set of environments, train the LLM on trajectories generated from every other group, and test the resulting model's performance on the left-out group. Our results show that PAPRIKA (LOO) outperforms the starting model, Llama-3.1-8B-Instruct, in 6 representative task groups. This shows that the strategic exploration taught by PAPRIKA is not tied to a particular environment, and <b>scaling up the number of task groups in PAPRIKA can be a viable solution for teaching LLMs general in-context RL abilities</b>.
+        Prolonged training with SRT can lead to <b>reward hacking</b> ---the model 
+        learns to produce consistent responses in order to optimize its self-assigned reward, 
+        irrespective of their true correctness. Indeed, manual analysis of the model outputs 
+        (examples shown below) confirms this hypothesis: after collapse, the model outputs a very high entropy, 
+        essentially random, set of tokens followed by the same template final answer that is nearly independent of the input prompt.
+        In other words, <b>the initially strong correlation between the SRT objective and correctness is ultimately compromised, 
+        becoming no longer a reliable proxy signal.</b>
         
         <center>
-          <img src="./static/images/paprika_generalization.png"
-            alt="paprika_generalization"
+          <img src="./static/images/srt_reward_hacking_example.png"
+            alt="srt_reward_hacking_example"
             width="90%"
-            class="paprika_generalization"/>
+            class="srt_reward_hacking_example"/>
         </center>
 
         <div class="box" style="background-color:aliceblue">
           <div class="content has-text-centered">
             <p>
-              <b>(Testing generalization of PAPRIKA via leave-one-out experiments)</b> We test PAPRIKA's zero-shot performance on unseen task groups by leave-one-out (LOO) experiments, where we train the LLM on trajectories from every task group except the group we test on. All evaluations are done at temperature 0.7 and we report <b>average success rate</b>. Our experiments demonstrate that PAPRIKA can teach an LLM sequential decision making abilities that often transfers well to new tasks without needing any additional training.
+              <b>(Model response for the same prompts before and after training with SRT)</b> Three examples of model responses 
+              for the same prompt, before and after prolonged training with SRT on the DAPO dataset, 
+              for a Qwen2.5-Math-7B model. Notice that for some prompts, the model responses before training ends before completion, 
+              this is due to the model running out of our token generation budget. The model after 1200 steps of SRT training 
+              exhibits performance collapse, and it outputs \texttt{\string\boxed\{1\}} and some other incoherent set of tokens 
+              irrespective of the given prompt.
+            </p>
+          </div>
+        </div>
+
+        <center>
+          <img src="./static/images/srt_training_dynamics.png"
+            alt="srt_training_dynamics"
+            width="90%"
+            class="srt_training_dynamics"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-centered">
+            <p>
+              <b>(Self-Training Dynamics)</b> Extended training via SRT can lead to reward hacking, 
+              as demonstrated by the sudden hike in KL penalty and training (psuedo-)reward, but collapse of accuracy on the held-out test sets.
             </p>
           </div>
         </div>
