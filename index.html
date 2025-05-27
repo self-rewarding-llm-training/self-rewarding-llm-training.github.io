@@ -348,7 +348,7 @@
           </div>
         </div>
 
-        <h2 class="title is-4">Can model collapse during SRT be avoided?</h2>
+        <h2 class="title is-3">Can model collapse during SRT be avoided?</h2>
         
         <p>
         Our initial experiments demonstrate that prolonged training with SRT leads to model collapse due to 
@@ -365,9 +365,7 @@
           <li><b>(3)</b> A <b>data-driven</b> curriculum-based strategy to enhance model performance beyond simple early stopping.</li>
         </ul>
 
-        <p>
-          
-        </p>
+        <div style="height: 40px;"></div>
 
         <h3 class="title is-4">Early stopping lets us retain most of the benefits of SRT</h3>
 
@@ -430,17 +428,18 @@
         This conjecture aligns with our empirical findings above: the model experiences earlier collapse 
         when training on the difficult DAPO dataset compared to the simpler MATH-12K dataset. 
         </p>
+        <div style="height: 40px;"></div>
 
         <p>
           We leverage this hypothesis to implement a curriculum learning strategy by identifying the 'easiest' subset of 
           the DAPO dataset. To be precise, we retain 1/3-rd of the easiest DAPO prompts selected according to two distinct metrics:
         </p>
-
+        <div style="height: 40px;"></div>
         <ul>
           <li><b>(1)</b> <b>Pass rate of the base model</b>, which utilizes ground-truth labels. </li>
           <li><b>(2)</b> <b>Frequency of the majority vote</b>, which does not require ground-truth labels. </li>
         </ul>
-
+        <div style="height: 40px;"></div>
         <p>
         The Figure below shows that training on these easier subsets significantly delays the onset of reward hacking, 
         allowing for continuous improvement even across multiple epochs. Remarkably, performance on these curriculum subsets 
