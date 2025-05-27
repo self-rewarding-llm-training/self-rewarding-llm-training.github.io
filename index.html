@@ -189,28 +189,35 @@
             The goal of our paper is to answer the following questions: 
           </p>
           <ul>
-            <li><b>(1)</b> Can LLMs generate their own training supervision? If so, how?</li>
-            <li><b>(2)</b> How does this perform compared to other methods?</li>
+            <li><b>(1)</b> Can LLMs generate their own training supervision? If so, can we provide a simple algorithm for this?</li>
+            <li><b>(2)</b> How does this algorithm for self-training perform?</li>
             <li><b>(3)</b> Do this method have any limitations? How can we address them?</li>
           </ul>
         </div>
 
         <h2 class="title is-3" id="srt">Self-Rewarding Training (SRT)</h2>
         <div class="content has-text-justified">
-          PAPRIKA aims to solve the above problems. First, we design a suite of complex decision-making tasks that require strategic information gathering to succeed. Next, we show that in the absence of known good algorithms, existing LLMs can generate trajectories with better decision making behaviors through diversity-encouraging sampling. We then finetune the LLMs to prefer higher performing trajectories (in a fashion similar to <a href="https://arxiv.org/abs/2203.14465">STaR</a>) and show that this leads to better decision making abilities at test-time. More importantly, <b>these behaviors often generalize to unseen task groups without additional training</b>. Finally, we propose a general curriculum learning algorithm that can dynamically choose which subset of tasks to train on next to improve data efficiency of such training methods. We next describe each component of PAPRIKA.
+          In our work, we provide a simple algorithm for self-training. We notice that LLMs are generally more consistent when
+          they are correct (for example, majority voting typically outperforms average performance). We leverage this property
+          to generate training signal for an LLM wihout ground truth labels --- concretely, during RL training, we calculate
+          the majority voting answer for each prompt, and use this as if it was the ground truth answer. This is a simple algorithm
+          compatible with any RLVR algorithm since the only change is how we generate the reward signal. Next, we describe different
+          components of SRT.
         </div>
 
         <center>
-          <img src="./static/images/paprika_overview.png"
+          <img src="./static/images/srt_components.png"
             width="90%"
-            alt="paprika_task_groups"
-            class="paprika_task_groups"/>
+            alt="srt_components"
+            class="srt_components"/>
         </center>
 
         <div class="box" style="background-color:aliceblue">
           <div class="content has-text-centered">
             <p>
-              <b>(Main Components of PAPRIKA)</b> The PAPRIKA framework consists of task construction, task selection, generating good exploration behavior via diversity encouraging sampling from an LLM, and finally training the LLM on self-generated trajectories that attained high scores.
+              <b>(Different Components of SRT)</b> The SRT algorithm consists of taking an prompt or question,
+              generating multiple responses from the LLM for the prompt, calculate the majority voting answer based on these
+              responses, and then use the majority voting answer as a proxy for ground truth to provide reward for RL training.
             </p>
           </div>
         </div>
