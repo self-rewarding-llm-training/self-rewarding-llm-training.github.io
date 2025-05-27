@@ -348,25 +348,121 @@
           </div>
         </div>
 
-        <h3 class="title is-4">Example Trajectories</h3>
+        <h2 class="title is-4">Can model collapse during SRT be avoided?</h2>
         
-        Here we list two example trajectories, one from the regular Llama-3.1-8B-Instruct model, and another from the PAPRIKA fine-tuned model, on the 20 questions task group. The hidden topic the agent has to guess is a <b>concept</b>, and the correct answer is <b>primary numbers</b>. We see qualitatively that PAPRIKA teaches the model to ask better quality questions.
+        <p>
+        Our initial experiments demonstrate that prolonged training with SRT leads to model collapse due to 
+        reward hacking. The next natural question is, can we avoid reward training? This will be crucial in order for
+        SRT to be a practical algorithm for improving LLM capabilities.
+        </p>
+
+        <p>
+          In this work, we have explored three ideas to avoid or mitigate model collapse, namely: 
+        </p>
+        <ul>
+          <li><b>(1)</b> An <b>early stopping</b> strategy to avoid model collapse by monitoring the performance on a small labeled validation dataset </li>
+          <li><b>(2)</b> An <b>algorithmic</b> strategy that mitigates the risk of model collapse by using pseudo-labels generated from a stable base model rather than from the continuously updated model. </li>
+          <li><b>(3)</b> A <b>data-driven</b> curriculum-based strategy to enhance model performance beyond simple early stopping.</li>
+        </ul>
+
+        <h3 class="title is-4">Early stopping lets us retain most of the benefits of SRT</h3>
+
+        The use of a validation dataset for hyper-parameter tuning 
+        and model selection is a staple of modern machine learning practice. 
+        If a small labeled validation dataset is available, it can be used to identify the peak performance of 
+        the model under self-training.
 
         <center>
-          <img src="./static/images/paprika_example_task_trajectories.png"
-            alt="paprika_example_task_trajectories"
+          <img src="./static/images/srt_early_stopping.png"
+            alt="srt_early_stopping"
             width="70%"
-            class="paprika_example_task_trajectories"/>
+            class="srt_early_stopping"/>
         </center>
 
         <div class="box" style="background-color:aliceblue">
           <div class="content has-text-justified">
             <p>
-              <b>(Qualitative analysis of behaviors taught by PAPRIKA)</b> PAPRIKA not only improves over the starting model in terms of success rate and other metrics, but also shows better sequential decision making abilities. Here we present two example trajectories on 20 questions, where the hidden topic the agent has to guess is a <b>concept</b>, and the correct answer is <b>primary numbers</b>. The PAPRIKA fine-tuned model asks much better quality questions and is able to guess the topic in 8 turns, whereas the regular instruct model cannot guess it after spending all 20 turns, in all 4 attempts that we ran (we only show first 9 turns for the sake of brevity).
+              <b>(Early Stopping is Effective)</b> The peak performance occur at nearly the same point for all heldout sets, 
+              so using any would be effective for early stopping.
             </p>
           </div>
         </div>
+
+        <h3 class="title is-4">Generating labels via a fixed checkpoint instead of the online-evolving policy can provide stability</h3>
         
+        The tendency toward model collapse arises because SRT prioritizes consistency over correctness, 
+        increasingly rewarding model agreement even if incorrect. 
+        A straightforward yet effective approach to address this involves generating pseudo-labels from a stable, 
+        previously fixed checkpoint, rather than leveraging labels from the evolving policy. 
+        To evaluate this approach, we generate pseudo-labels via majority voting rollouts 
+        from the Qwen2.5-Math-7B base model, store these offline-generated labels, 
+        and subsequently perform RL training against them. The figure below demonstrates that 
+        training with these offline-generated labels significantly stabilizes training while achieving performance 
+        comparable to SRT. Importantly, this indicates that the dynamic updating of pseudo-labels during training 
+        (online labeling) may not always confer substantial benefits, and instead can contribute to training instability.
+        
+        <center>
+          <img src="./static/images/srt_offline_generated_data.png"
+            alt="srt_offline_generated_data"
+            width="70%"
+            class="srt_offline_generated_data"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-justified">
+            <p>
+              <b>(Self-Training with Offline-Generated Labels)</b> Performance comparison between SRT 
+              and a baseline variant, where pseudo-labels are precomputed from a fixed base model checkpoint. 
+              The offline-generated labels maintain training stability while achieving comparable performance to SRT, 
+              highlighting a limitation of the online labeling strategy.
+            </p>
+          </div>
+        </div>
+
+        <h3 class="title is-4">Self-rewarding training with curriculum can avoid (or substantially delay) model collapse</h3>
+
+        <p>
+        We hypothesize that <b>model collapse occurs more rapidly when training on more challenging datasets</b>. 
+        This conjecture aligns with our empirical findings above: the model experiences earlier collapse 
+        when training on the difficult DAPO dataset compared to the simpler MATH-12K dataset. 
+        </p>
+
+        <p>
+          We leverage this hypothesis to implement a curriculum learning strategy by identifying the 'easiest' subset of 
+          the DAPO dataset. To be precise, we retain 1/3-rd of the easiest DAPO prompts selected according to two distinct metrics:
+        </p>
+
+        <ul>
+          <li><b>(1)</b> <b>Pass rate of the base model</b>, which utilizes ground-truth labels. </li>
+          <li><b>(2)</b> <b>Frequency of the majority vote</b>, which does not require ground-truth labels. </li>
+        </ul>
+
+        <p>
+        The Figure below shows that training on these easier subsets significantly delays the onset of reward hacking, 
+        allowing for continuous improvement even across multiple epochs. Remarkably, performance on these curriculum subsets 
+        reaches levels comparable to standard RL training with ground-truth labels on the entire DAPO dataset.
+        </p>
+
+
+        <center>
+          <img src="./static/images/srt_curriculum.png"
+            alt="srt_curriculum"
+            width="70%"
+            class="srt_curriculum"/>
+        </center>
+
+        <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-justified">
+            <p>
+              <b>(Curriculum-Based Self-Training)</b> Performance of SRT on curated subsets 
+              containing the easiest 1/3 of prompts from the DAPO dataset, selected based either 
+              on model pass rate or frequency of the majority vote. Training on these easier subsets 
+              prevents reward hacking even after extensive training (3 epochs), demonstrating the effectiveness 
+              of curriculum learning strategies in sustaining continual model improvement.
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
