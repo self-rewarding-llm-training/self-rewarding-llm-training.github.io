@@ -6,7 +6,7 @@
         content="A reinforcement learning framework where LLMs generate their own supervision signal via majority voting">
   <meta name="keywords" content="LLM, Reasoning, Self-Improvement">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>srt</title>
+  <title>SRT: Can Large Reasoning Models Self-Train?</title>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
@@ -123,21 +123,6 @@
 
 </section>
 
-
-<section class="hero teaser">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <img src="./static/images/srt_teaser_figure.png"
-        alt="Teaser image."
-        class="teaser-image"/>
-      <h2 class="subtitle has-text-centered">
-        <b>(Overview of Self-Rewarding Training)</b><br>Unlike reinforcement learning with verifiable rewards, which uses a ground-truth verifier for reward generation, Self-Rewarding Training estimates rewards intrinsically through majority voting among model-generated solutions, allowing continual self-improvement without external annotations.
-      </h2>
-    </div>
-  </div>
-</section>
-
-
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Abstract. -->
@@ -165,6 +150,28 @@
     </div>
     <!--/ Abstract. -->
   <hr>
+
+
+  <!-- Threshold Plot -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/srt_threshold_plot.png"
+        alt="Teaser image."
+        class="teaser-image"/>
+      <h2 class="subtitle has-text-justified">
+        <b>Motivation:</b>
+        Language models make more correct predictions when their answers are ensembled via majority voting (majority vote accuracy)
+        than when they make single predictions (average per prompt accuracy, orange line). The goal of this work is to see if we can leverage this signal to train language models without requiring ground-truth labels.
+
+
+      </h2>
+    </div>
+  </div>
+</section>
+
+<!-- Threshold Plot -->
+
 <section class="section">
   <div class="container is-max-desktop">
     <!-- Animation. -->
@@ -174,12 +181,12 @@
         <h2 class="title is-3" id="setup">Problem Setting</h2>
         <div class="content has-text-justified">
           <p>
-            Recently, reinforcement learning from verifiable rewards (RLVR) has demonstrated significant success in enhancing the reasoning capabilities of large language models (LLMs), particularly in domains such as mathematics and coding (<a href="https://arxiv.org/abs/2412.16720">OpenAI et al.</a>, <a href="https://arxiv.org/abs/2501.12948">DeepSeek-AI et al.</a>). 
+            Reinforcement learning from verifiable rewards (RLVR) has demonstrated significant success in enhancing the reasoning capabilities of large language models (LLMs), particularly in domains such as mathematics and coding (<a href="https://arxiv.org/abs/2412.16720">OpenAI et al.</a>, <a href="https://arxiv.org/abs/2501.12948">DeepSeek-AI et al.</a>). 
             However, these approaches depend on ground-truth verifiers—often created by humans—to generate reward signals during training. This reliance can be restrictive, as obtaining gold-standard solutions for every relevant problem is frequently costly.
           </p>          
           <p>
             <p>
-              In this paper, we aim to address the following questions:
+              In this paper, we ask the following questions:
             </p>
             <ul>
               <li><b>(1)</b> Can LLMs generate their own supervision for training? If so, can we propose a simple algorithm to achieve this?</li>
@@ -197,17 +204,29 @@
             Below, we describe the key components of the Self-Rewarded Training (SRT) algorithm.
         </div>
 
-        <center>
+        <!-- <center>
           <img src="./static/images/srt_components.png"
             width="60%"
             alt="srt_components"
             class="srt_components"/>
-        </center>
+        </center> -->
+        <section class="hero teaser">
+          <div class="container is-max-desktop">
+            <div class="hero-body">
+              <img src="./static/images/srt_teaser_figure.png"
+                alt="Teaser image."
+                class="teaser-image"/>
+              <h2 class="subtitle has-text-centered">
+                <b>(Overview of Self-Rewarded Training)</b><br>Unlike reinforcement learning with verifiable rewards, which uses a ground-truth verifier for reward generation, Self-Rewarding Training estimates rewards intrinsically through majority voting among model-generated solutions, allowing continual self-improvement without external annotations.
+              </h2>
+            </div>
+          </div>
+        </section>
 
         <div class="box" style="background-color:aliceblue">
-          <div class="content has-text-centered">
+          <div class="content has-text-justified">
             <p>
-              <b>(Self-Rewarded Training)</b> <br> The SRT algorithm involves taking a prompt or question, generating multiple responses from the LLM, calculating the majority-vote answer from these responses, and then using this majority-voted answer as a proxy for ground truth to provide a reward signal for reinforcement learning training.
+              <b>Self-Rewarded Training: </b> The SRT algorithm involves taking a prompt or question, generating multiple responses from the LLM, calculating the majority-vote answer from these responses, and then using this majority-voted answer as a proxy for ground truth to provide a reward signal for reinforcement learning training.
             </p>
           </div>
         </div>
@@ -468,10 +487,33 @@
 
       </div>
     </div>
+  <hr>
+  <h2 class="title is-3" id="setup">TL;DR: Takeaways:</h2>
+  <div class="content has-text-justified">
+    <p>
+      In summary:
+    </p>          
+    <p>  
+    <ul>
+      <li><b>(1)</b> <b>Can LLMs generate their own supervision for training? If so, can we propose a simple algorithm to achieve this?</b></li>
+      <br>&rarr; Yes, we can.
+      We propose a simple self-training alogorithm (SRT) that leverages the model's self-consistency to infer correctness signals and train without any ground-truth supervision.
+      <li><b>(2)</b> <b>How effective is this self-training algorithm?</b></li>
+      <br>&rarr; We show that our simple self training algorithm, SRT, can achieve performance levels comparable to reinforcement learning methods trained explicitly on gold-standard answers on difficult mathematical reasoning tasks.
+      We also show that at test time, SRT provides a minor, but noticable boost in performance over several datasets.
+      <li><b>(3) Does this method have limitations, and if so, how might we overcome them?</b></li>
+      <br>&rarr; Yes, we show that SRT suffers from performance collapse due to reward hacking, where over time, the model learns to produce consistent responses in order to optimize its self-assigned reward, irrespective of their true correctness.
+      We explore three strategies to mitigate this issue: (1) early stopping, (2) offline labeling, and (3) curriculum learning (training using easy samples).
+      Among them, early stopping and offline labeling are the easiest to implement; however, curriculum learning approach offers insightful into model's learning dynamics.
+    </ul>            
   </div>
 </section>
+</div>
 
 <hr>
+
+
+
 
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
@@ -489,6 +531,8 @@
 </code></pre>
   </div>
 </section>
+
+
 
 
 <footer class="footer">
