@@ -102,8 +102,8 @@
       <div class="column is-full-width">
         <div class="content has-text-justified">
         <p>
-          Reinforcement learning from verifiable rewards (RLVR) significantly enhances large language models' (LLMs) reasoning abilities, notably in math and coding (<a href="https://arxiv.org/abs/2412.16720">OpenAI et al.</a>, <a href="https://arxiv.org/abs/2501.12948">DeepSeek-AI et al.</a>). 
-          However, RLVR relies on human-created ground-truth verifiers, making it costly and restrictive to generate reward signals for every problem.
+          Reinforcement learning from verifiable rewards significantly enhances large language models' (LLMs) reasoning abilities, notably in math and coding (<a href="https://arxiv.org/abs/2412.16720">OpenAI et al.</a>, <a href="https://arxiv.org/abs/2501.12948">DeepSeek-AI et al.</a>). 
+          However, it relies on human-created ground-truth verifiers, making it costly and restrictive to generate reward signals for every problem.
           In this work, we ask the following questions:
         </p>
         <ul>
@@ -176,7 +176,7 @@
         </center>
 
         <div class="content has-text-justified">
-These findings indicate that the model learns to maximize self-assigned rewards by producing consistent (second graph above) but incorrect answers (rightmost graph above). 
+These findings indicate that the model learns to maximize self-assigned rewards by producing consistent (second graph above) but incorrect answers (leftmost graph above). 
 Manual inspection confirms this: after collapse, model outputs degenerate into random token sequences with a fixed, prompt-independent answer (e.g., 'the solution is 1'). 
         There is a simple yet precise theoretical justification for this behavior:      
         </div>       
@@ -203,7 +203,7 @@ approaches to sustaining continual model improvement.</p>
 <br>
 
 <p><strong>(i) Early Stopping:</strong> A small validation set can reliably detect peak model performance and prevent collapse during self-training. 
-The peak performance occur at nearly the same point for all heldout sets, so using any would be effective for early stopping.</p>
+The peak performance occurs at nearly the same point for all heldout sets, so using any would be effective for early stopping.</p>
 
         <center>
           <img src="./static/images/srt_early_stopping.png"
