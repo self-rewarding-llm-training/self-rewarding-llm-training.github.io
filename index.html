@@ -247,11 +247,33 @@ extend the benefits of SRT, opening exciting avenues for future investigation.
   <hr>
   <h2 class="title is-3" id="setup">Related Literature:</h2>
   <div class="content has-text-justified">
-    <p>
+    <p> Several previous and concurrent works have explored self-training LLMs before:
+      <ul>
+        <li>Previous works like <a href="https://proceedings.neurips.cc/paper_files/paper/2022/hash/639a9a172c044fbb64175b5fad42e9a5-Abstract-Conference.html">Zeikerman et al. (2022)</a> and <a href="https://arxiv.org/abs/2210.11610">Huang et al (2022)</a> previously demonstrated 
+        that LLMs can self improve their performance on reasoning tasks by training on CoT traces distilled from a previous instance of the model. Particularly, 
+        <a href="https://arxiv.org/abs/2210.11610" target="_blank">Huang et al., 2023</a>; 
+        <a href="https://arxiv.org/abs/2203.11171" target="_blank">Wang et al., 2023a</a>; 
+        <a href="https://arxiv.org/abs/2411.04109" target="_blank">Prasad et al., 2024</a> 
+        demonstrated the feasibility of using majority voting and self-consistency to filter
+        chain-of-thought traces that, when used as SFT training data, improve the LLM performance on
+        downstreaming tasks.</li>
+      </ul>
+      <p>More concurrently,</p>
+      </ul>
+      <ul>
+        <li><a href="https://arxiv.org/abs/2411.04109" target="_blank">TTRL (Zuo et al., 2025)</a>, 
+          also proposes a label-free online RL paradigm in a test time setting, similar to SRT used at test time (Section 4.2). 
+          Our work also explores this paradigm in Section 4.2 as an extension of the SRT algorithm.
+          </li>
+        <li>Similarly, <a href="https://arxiv.org/abs/2505.19590" target="_blank">Zhao et al., 2025</a> propose RLIF (Reinforcement Learning from Internal Feedback) that incorporates token certainty as a training signal to train the model.</li>
+        <li>Lately, another concurrent work 
+          <a href="https://github.com/ruixin31/Rethink_RLVR/blob/main/paper/rethink-rlvr.pdf" target="_blank">Shao et al., 2025</a> 
+          showed that RL with spurious reward (including majority voting) can lead to a performance boost for some LLMs.
+        </li>
+      </ul>
+      
     </p>          
-    <p>  
-    <ol>
-    </ol>            
+
   </div>
 </section>
 </div>
