@@ -64,25 +64,24 @@
           <h1 class="title is-1 publication-title">Can Large Reasoning Models Self-Train?</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://sheikhshafayat.github.io/">Sheikh Shafayat</a><sup>*1</sup>,
+              <a href="https://sheikhshafayat.github.io/">Sheikh Shafayat</a><sup>*</sup>,
             </span>
             <span class="author-block">
-              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>*2</sup>,
+              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>*</sup>,
+            </span><br>
+            <span class="author-block">
+              <a href="https://www.cs.cmu.edu/~rsalakhu/">Ruslan Salakhutdinov</a>,
             </span>
             <span class="author-block">
-              <a href="https://www.cs.cmu.edu/~rsalakhu/">Ruslan Salakhutdinov</a><sup>2</sup>,
+              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a>,
             </span>
             <span class="author-block">
-              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a><sup>2</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://azanette.com">Andrea Zanette</a><sup>2</sup>
-            </span>
+              <a href="https://azanette.com">Andrea Zanette</a>
+            </span>                      
 
           <div class="is-size-5 publication-authors">
+            <span class="author-block">Carnegie Mellon University</span><br>
             <span class="author-block"><sup>*</sup>Equal Contribution</span>
-            <span class="author-block"><sup>1</sup>Independent Researcher</span>
-            <span class="author-block"><sup>2</sup>Carnegie Mellon University</span>
           </div>
 
           <div class="column has-text-centered">
@@ -132,9 +131,7 @@
         alt="Teaser image."
         class="teaser-image"/>
       <h2 class="subtitle has-text-centered">
-        <b>(Overview of Self-Rewarding Training or SRT)</b> In Reinforcement Learning from Verifiable Reward (RLVR), one produces the reward for RL training using a ground truth verifier. 
-        Contrary to that, Self-Rewarding Training (SRT) does not assume access to a ground truth verifier; instead it uses majority voting 
-        from the model's own generations to estimate the ground truth, and use this proxy reward signal to train the model.
+        <b>(Overview of Self-Rewarding Training)</b><br>Unlike reinforcement learning with verifiable rewards, which uses a ground-truth verifier for reward generation, Self-Rewarding Training estimates rewards intrinsically through majority voting among model-generated solutions, allowing continual self-improvement without external annotations.
       </h2>
     </div>
   </div>
@@ -177,32 +174,27 @@
         <h2 class="title is-3" id="setup">Problem Setting</h2>
         <div class="content has-text-justified">
           <p>
-            Recently reinforcement learning from verifiable rewards (RLVR) have seen a lot of success at improving
-            LLMs' reasoning abilities, particularly in the domains like math and coding (<a href="https://arxiv.org/abs/2412.16720">OpenAI et al.</a>,
-            <a href="https://arxiv.org/abs/2501.12948">DeepSeek-AI et al.</a>). 
-            However, these approaches 
-            require ground truth (possibly human written) verifiers to provide reward signal during training. This can
-            be quite limiting, since collecting gold answers for every problem we care about can become expensive.
-          </p>
-
+            Recently, reinforcement learning from verifiable rewards (RLVR) has demonstrated significant success in enhancing the reasoning capabilities of large language models (LLMs), particularly in domains such as mathematics and coding (<a href="https://arxiv.org/abs/2412.16720">OpenAI et al.</a>, <a href="https://arxiv.org/abs/2501.12948">DeepSeek-AI et al.</a>). 
+            However, these approaches depend on ground-truth verifiers—often created by humans—to generate reward signals during training. This reliance can be restrictive, as obtaining gold-standard solutions for every relevant problem is frequently costly.
+          </p>          
           <p>
-            The goal of our paper is to answer the following questions: 
-          </p>
-          <ul>
-            <li><b>(1)</b> Can LLMs generate their own training supervision? If so, can we provide a simple algorithm for this?</li>
-            <li><b>(2)</b> How does this algorithm for self-training perform?</li>
-            <li><b>(3)</b> Do this method have any limitations? How can we address them?</li>
-          </ul>
+            <p>
+              In this paper, we aim to address the following questions:
+            </p>
+            <ul>
+              <li><b>(1)</b> Can LLMs generate their own supervision for training? If so, can we propose a simple algorithm to achieve this?</li>
+              <li><b>(2)</b> How effective is this self-training algorithm?</li>
+              <li><b>(3)</b> Does this method have limitations, and if so, how might we overcome them?</li>
+            </ul>            
         </div>
 
-        <h2 class="title is-3" id="srt">Self-Rewarding Training (SRT)</h2>
+        <h2 class="title is-3" id="srt">Self-Rewarded Training (SRT)</h2>
         <div class="content has-text-justified">
-          In our work, we provide a simple algorithm for self-training. We notice that LLMs are generally more consistent when
-          they are correct (for example, majority voting typically outperforms average performance). We leverage this property
-          to generate training signal for an LLM wihout ground truth labels --- concretely, during RL training, we calculate
-          the majority voting answer for each prompt, and use this as if it was the ground truth answer. This is a simple algorithm
-          compatible with any RLVR algorithm since the only change is how we generate the reward signal. Next, we describe different
-          components of SRT.
+            In this paper, we propose and investigate a simple self-training algorithm based on the observation that LLMs tend to be more consistent when their answers are correct—indeed, majority voting usually achieves better performance than individual answers. 
+            We exploit this property to generate training signals without requiring ground-truth labels. 
+            Specifically, during reinforcement learning, we calculate the majority-vote answer for each prompt and treat this consensus as the ground-truth label. 
+            This straightforward approach is compatible with any RLVR method, as it only modifies how the reward signal is derived. 
+            Below, we describe the key components of the Self-Rewarded Training (SRT) algorithm.
         </div>
 
         <center>
@@ -215,17 +207,14 @@
         <div class="box" style="background-color:aliceblue">
           <div class="content has-text-centered">
             <p>
-              <b>(Different Components of SRT)</b> The SRT algorithm consists of taking an prompt or question,
-              generating multiple responses from the LLM for the prompt, calculate the majority voting answer based on these
-              responses, and then use the majority voting answer as a proxy for ground truth to provide reward for RL training.
+              <b>(Self-Rewarded Training)</b> <br> The SRT algorithm involves taking a prompt or question, generating multiple responses from the LLM, calculating the majority-vote answer from these responses, and then using this majority-voted answer as a proxy for ground truth to provide a reward signal for reinforcement learning training.
             </p>
           </div>
         </div>
         
-        <h3 class="title is-4">Training Algorithm</h3>
         <div class="content has-text-justified">
           <!-- Create Bullet Point List to Summarize -->
-          We provide our formal training algorithm below:
+          We provide our formal training algorithm below.
         </div>
 
         <center>
@@ -238,7 +227,7 @@
         <h2 class="title is-3" id="empirical">Empirical Results</h2>
 
         <!-- Interpolating. -->
-        <h3 class="title is-4">SRT leads to 100% relative improvement, but also suffers from performance collapse</h3>
+        <!-- <h3 class="title is-4">SRT leads to 100% relative improvement, but also suffers from performance collapse</h3> -->
         
         <center>
           <img src="./static/images/self_training_performance.png"
@@ -250,9 +239,8 @@
         <div class="box" style="background-color:aliceblue">
           <div class="content has-text-centered">
             <p>
-              <b>(Self-Training Performance)</b> Average over 3 heldout test dataset performance of SRT vs training with ground truth reward. 
-              Training for longer with SRT can lead to performance collapse, but at the peak, it leads to around 100% performance improvement over the base model.
-              Earlier in the training, it leads to similar improvement as RL training with ground truth.
+              <b>(Self-Training Performance)</b><br> 
+              Average performance of SRT versus RL training evaluated on three held-out test datasets using ground truth rewards. Early in training, SRT performance closely matches RL but collapses with prolonged training. At its peak, SRT achieves approximately 100% improvement over the baseline model.
             </p>
           </div>
         </div>
