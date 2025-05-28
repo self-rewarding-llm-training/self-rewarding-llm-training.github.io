@@ -240,7 +240,7 @@
           <div class="content has-text-centered">
             <p>
               <b>(Self-Training Performance)</b><br> 
-              Average performance of SRT versus RL training evaluated on three held-out test datasets using ground truth rewards. Early in training, SRT performance closely matches RL but collapses with prolonged training. At its peak, SRT achieves approximately 100% improvement over the baseline model.
+              Average performance of SRT versus RL training evaluated on three held-out test datasets using ground truth rewards. Early in training, SRT performance closely matches RL but collapses with prolonged training. At its peak, SRT achieves approximately 100% improvement over the base model.
             </p>
           </div>
         </div>
@@ -269,7 +269,7 @@
               for the same prompt, before and after prolonged training with SRT on the DAPO dataset, 
               for a Qwen2.5-Math-7B model. Notice that for some prompts, the model responses before training ends before completion, 
               this is due to the model running out of our token generation budget. The model after 1200 steps of SRT training 
-              exhibits performance collapse, and it outputs \texttt{\string\boxed\{1\}} and some other incoherent set of tokens 
+              exhibits performance collapse, and it outputs \boxed{1} and some other incoherent set of tokens 
               irrespective of the given prompt.
             </p>
           </div>
@@ -293,7 +293,7 @@
   
         <h3 class="title is-4">SRT can be used for test-time training</h3>
 
-        Since SRT does not require ground truth answers, one can also use our algorithm for test-time training ---
+        Since SRT does not require ground truth answers, one can also use our algorithm for test-time training —
         that is, given a test set, one can first run SRT on this set, and then make predictions. We
         see that this can lead to minor
         performance improvement on the test set.
@@ -315,9 +315,9 @@
           </div>
         </div>
 
-        Moreover, given the test dataset is small enough, SRT pseudo-reward can very quickly saturate.
-        This means very little learning signal is provided to the model throughout the rest of the training. As a result,
-        we observe very little reward hacking or performance collapse in the test-time training setup, compared to the regular setup.
+        Interstingly, we observe very little reward hacking or performance collapse in the test-time training setup, compared to the regular setup.
+        Our analysis suggests that given the test dataset is small, SRT pseudo-reward can very quickly saturate (see second plot in the figure below), 
+        which means very little learning signal is provided to the model throughout the rest of the training and hence, the model does not get the chance to learn to hack the reward.
 
         <center>
           <img src="./static/images/srt_test_time_training_dynamics.png"
@@ -362,7 +362,7 @@
         The use of a validation dataset for hyper-parameter tuning 
         and model selection is a staple of modern machine learning practice. 
         If a small labeled validation dataset is available, it can be used to identify the peak performance of 
-        the model under self-training.
+        the model under self-training. As the figure below shows, the exact choice of the validation dataset does not matter much for early stopping.
 
         <center>
           <img src="./static/images/srt_early_stopping.png"
@@ -380,9 +380,9 @@
           </div>
         </div>
 
-        <h3 class="title is-4">Generating labels via a fixed checkpoint instead of the online-evolving policy can provide stability</h3>
+        <h3 class="title is-4">Generating labels via a fixed checkpoint (offline labeling) instead of the online-evolving policy can provide stability</h3>
         
-        The tendency toward model collapse arises because SRT prioritizes consistency over correctness, 
+        Model collapse arises because SRT prioritizes consistency over correctness, 
         increasingly rewarding model agreement even if incorrect. 
         A straightforward yet effective approach to address this involves generating pseudo-labels from a stable, 
         previously fixed checkpoint, rather than leveraging labels from the evolving policy. 
@@ -390,8 +390,8 @@
         from the Qwen2.5-Math-7B base model, store these offline-generated labels, 
         and subsequently perform RL training against them. The figure below demonstrates that 
         training with these offline-generated labels significantly stabilizes training while achieving performance 
-        comparable to SRT. Importantly, this indicates that the dynamic updating of pseudo-labels during training 
-        (online labeling) may not always confer substantial benefits, and instead can contribute to training instability.
+        comparable to SRT. Importantly, this indicates that the <strong> dynamic updating of pseudo-labels during training 
+        (online labeling) may not always confer substantial benefits</strong>, and instead can contribute to training instability.
         
         <div style="height: 40px;"></div>
 
@@ -419,6 +419,7 @@
         We hypothesize that <b>model collapse occurs more rapidly when training on more challenging datasets</b>. 
         This conjecture aligns with our empirical findings above: the model experiences earlier collapse 
         when training on the difficult DAPO dataset compared to the simpler MATH-12K dataset. 
+        MATH-12k collapses after ~ 1200 steps (2 epochs) of training, while DAPO collapses after ~ 600 steps (1/3 of an epoch) of training.
         </p>
         <div style="height: 40px;"></div>
 
@@ -428,12 +429,18 @@
         </p>
         <div style="height: 40px;"></div>
         <ul>
-          <li><b>(1)</b> <b>Pass rate of the base model</b>, which utilizes ground-truth labels. </li>
-          <li><b>(2)</b> <b>Frequency of the majority vote</b>, which does not require ground-truth labels. </li>
+          <li><b>(1)</b> <b>Pass rate of the base model</b>, which utilizes ground-truth labels.
+          We sort the questions based on per prompt pass rate out of 32 rollouts from the base model and keep 1/3rd of the prompts with the highest pass rate.
+          </li>
+          <li><b>(2)</b> <b>Frequency distribution of the majority vote</b>, which does not require ground-truth labels. 
+          Similarly, we sort the questions based on the frequency of the majority vote out of 32 rollouts from the base model and keep 1/3rd of the prompts with the highest frequency.
+          </li>
         </ul>
+        Note that in oth cases the chosen pseudo-label might not be the correct labels, rather just a likely label.
+
         <div style="height: 40px;"></div>
         <p>
-        The Figure below shows that training on these easier subsets significantly delays the onset of reward hacking, 
+        The Figure below shows that <b>training on these easier subsets significantly delays the onset of reward hacking </b>, 
         allowing for continuous improvement even across multiple epochs. Remarkably, performance on these curriculum subsets 
         reaches levels comparable to standard RL training with ground-truth labels on the entire DAPO dataset.
         </p>
