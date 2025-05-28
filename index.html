@@ -272,22 +272,9 @@ extend the benefits of SRT, opening exciting avenues for future investigation.
   <h2 class="title is-3" id="setup">Related Literature:</h2>
   <div class="content has-text-justified">
     <p>
-      In summary:
     </p>          
     <p>  
     <ol>
-      <li style="margin-top: 10px;"><b></b> <b>Can LLMs generate their own supervision for training? If so, can we propose a simple algorithm to achieve this?</b></li>
-      <br>&rarr; Yes, we can.
-      We propose a simple self-training alogorithm (SRT) that leverages the model's self-consistency to infer correctness signals and train without any ground-truth supervision.
-
-      <br><li style="margin-top: 10px;"><b></b> <b>How effective is this self-training algorithm?</b></li>
-      <br>&rarr; We show that our simple self training algorithm, SRT, can achieve performance levels comparable to reinforcement learning methods trained explicitly on gold-standard answers on difficult mathematical reasoning tasks.
-      We also show that at test time, SRT provides a minor, but noticable boost in performance over several datasets.
-      <li style="margin-top: 10px;"><b> Does this method have limitations, and if so, how might we overcome them?</b></li>
-      <br>&rarr; Yes, we show that SRT suffers from performance collapse due to reward hacking, where over time, the model learns to produce consistent responses in order to optimize its self-assigned reward, irrespective of their true correctness.
-      We explore three strategies to mitigate this issue: (1) early stopping, (2) offline labeling, and (3) curriculum learning (training using easy samples).
-      Among them, early stopping and offline labeling are the easiest to implement; however, curriculum learning approach offers insights into model's learning dynamics. 
-      Further research into developing more robust curriculum learning might be a promising 
     </ol>            
   </div>
 </section>
