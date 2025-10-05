@@ -162,33 +162,69 @@
         
       <br><br>
 
-        <h2 class="title is-3" id="srt">(2) SRT Works on Real-World Reasoning Tasks</h2>
+        <h2 class="title is-3" id="srt">(3) SRT Works on Real-World Reasoning Tasks</h2>
         <div class="content has-text-justified">
-        We empirically demonstrate that at early training stages, SRT achieves performance rivaling standard reinforcement-learning methods trained explicitly on gold-standard answers.       
-        Test datasets: AMC, AIME24, AIME25.
+        SRT achieves performance rivaling standard reinforcement-learning methods trained explicitly on gold-standard answers at the early stages of the training. More models and training dataset pairs are in the Appendix of the paper.
       </div>
 
         <!-- Interpolating. -->
         <!-- <h3 class="title is-4">SRT leads to 100% relative improvement, but also suffers from performance collapse</h3> -->
         
         <center>
-          <img src="./static/images/self_training_performance.png"
+          <img src="./static/images/srt_real_world.png"
             alt="self_training_performance"
             width="90%"
             class="self_training_performance"/>
         </center>
 
+
         <div class="content has-text-justified">
-      However, we find that the performance eventually collapses, see e.g. the trainining on DAPO in the rightmost picture---more on this below.
+      SRT shows improvement in the quality of the majority votes themselves, which distinguishes our algorithm from that of learning from a fixed teacher's majority votes.
+      </div>
+        
+        <center>
+          <img src="./static/images/srt_real_world_teacher_impromevent.png"
+            alt="srt_real_world_teacher_impromevent"
+            width="90%"
+            class="srt_real_world_teacher_impromevent"/>
+        </center>
+
+        <div class="content has-text-justified">
+      Note that for Llama-3.1-8B-Instruct, we use the official model card evaluation temperature of 0, hence majority@32 is the same as average@32 accuracy.
       </div>
         
       <br><br>
       
-        <h2 class="title is-3" id="srt">(3) Self-Training is Bound to Collapse</h2>
+      <h2 class="title is-3" id="srt">(4) Can Self Improvement Be Sustained Indefinitely?</h2>
         <div class="content has-text-justified">
-        We analyze the training dynamics of SRT when training on the challenging DAPO dataset.
+          SRT has the <span style="color: rgb(6, 144, 70);"><b>potential</b></span> to achieve <span style="color: rgb(6, 144, 70);"><b>multi-level improvement</b></span> in Reasoning Gym Tasks. In the following figure, the Qwen3-4B-Base model can climb on progressively more difficult tasks without ground truth labels via a simple curriculum strategy — where we train an earlier level's final checkpoint with SRT on the next difficulty level. 
+        </div>
+      <center>
+        <img src="./static/images/reasoning_gym_multilevel.png"
+          alt="reasoning_gym_multilevel_improvement"
+          width="100%"
+          class="reasoning_gym_multilevel_improvement"/>
+      </center>
+      
+      <div class="content has-text-justified">
+        
+      </div>
+      
+      <div class="content has-text-justified">
+        But training longer using SRT leads to <span style="color: rgb(182, 17, 17);"><b>reward hacking</b></span> and <span style="color: rgb(182, 17, 17);"><b>model collapse</b></span> in real world datasets:
       </div>
 
+        <center>
+          <img src="./static/images/model_collapse_real_world_datasets.png"
+            alt="srt_training_dynamics"
+            width="100%"
+            class="srt_training_dynamics"/>
+        </center>
+      
+      <div class="content has-text-justified">
+        While investivating this sudden model collapse, we find that the model learns to maximize self-assigned rewards by producing consistent (second graph below) but incorrect answers (leftmost graph below). Thus, the optimal policy under this objective degenerates to producing the same answer regardless of input, maximizing reward artificially. 
+        Continued self-training on this proxy naturally drives the model toward this trivial solution, especially when it's simpler than solving the actual task.
+      </div>
 
         <center>
           <img src="./static/images/srt_training_dynamics.png"
@@ -196,104 +232,117 @@
             width="100%"
             class="srt_training_dynamics"/>
         </center>
+      <div class="content has-text-justified">
+        
+        <strong>Manual inspection confirms this</strong>: after collapse, model outputs degenerate into random token sequences with a fixed, prompt-independent answer (e.g., '\boxed{1}'). 
+        <!-- There is a simple yet precise theoretical justification for this behavior:       -->
+      </div>       
 
-        <div class="content has-text-justified">
-These findings indicate that the model learns to maximize self-assigned rewards by producing consistent (second graph above) but incorrect answers (leftmost graph above). 
-Manual inspection confirms this: after collapse, model outputs degenerate into random token sequences with a fixed, prompt-independent answer (e.g., 'the solution is 1'). 
-        There is a simple yet precise theoretical justification for this behavior:      
-        </div>       
-
-          <div class="box" style="background-color:aliceblue">
+      <!-- <div class="box" style="background-color:aliceblue">
           <div class="content has-text-centered">
         <p>
           <b>The reinforcement learning optimization problem defined by the SRT objective<br>explicitly encourages consistency across outputs, independently of correctness.</b>
         </p>
           </div>
+      </div> -->
+    
+    <h2 class="title is-3" id="srt">Conclusion</h2>
+    
+    <h5 class="title is-5" id="srt">Takeaway 1</h5>
+    <div class="box" style="background-color:aliceblue">
+          <div class="content has-text-justified">
+        <p>
+          <b>On both synthetic and real reasoning tasks, SRT improves average and majority voting accuracies, showing ability gains beyond the base model. Specially, improvement in majority voting accuracy also signifies improvement of the quality of self-supervision during training demonstrating a promising path forward to self-improvement. </b>
+        </p>
+          </div>
+    </div>
+
+    <h5 class="title is-5" id="srt">Takeaway 2</h5>
+    <div class="box" style="background-color:aliceblue">
+        <div class="content has-text-justified">
+        <p>
+          <b> The question of whether self-training can be extended indefinitely has mixed results: while under controllable difficulty (Reasoning Gym), SRT <strong>has the potential</strong> to keep improving beyond the base model on progressively more difficult tasks, while training on real-world math problems demonstrate the phenomenon of reward hacking — sustained self-improvement requires developing additional regularization measures to be effective.</b>
+        </p>
         </div>
+    </div>
+    <!-- <h2 class="title is-3" id="srt">(4) Mitigation Strategies can be Effective</h2>
+    <div class="content has-text-justified">
+
+      <p>We propose strategies to mitigate reward hacking, laying the groundwork for effective future
+      approaches to sustaining continual model improvement.</p>
+
+      <br>
+
+      <p><strong>(i) Early Stopping:</strong> A small validation set can reliably detect peak model performance and prevent collapse during self-training. 
+      The peak performance occurs at nearly the same point for all heldout sets, so using any would be effective for early stopping.</p>
+
+              <center>
+                <img src="./static/images/srt_early_stopping.png"
+                  alt="srt_early_stopping"
+                  width="70%"
+                  class="srt_early_stopping"/>
+              </center>
+
+              <br><br>
+
+      <p><strong>(ii) Self-Training with Offline-Generated Labels:</strong> An effective approach involves generating pseudo-labels from a stable, previously
+      fixed checkpoint, rather than leveraging labels from the evolving policy. Doing so stabilizes training while achieving performance comparable to SRT. </p>
+
+              <center>
+                <img src="./static/images/srt_offline_generated_data.png"
+                  alt="srt_offline_generated_data"
+                  width="100%"
+                  class="srt_offline_generated_data"/>
+              </center>
+
+              <br><br>
+
+              <p><strong>(iii) Self-Training with Curriculum Learning:</strong> We hypothesize that model collapse occurs more rapidly when training on more challenging datasets, 
+      a conjecture that aligns with our empirical findings. The intuition is that, on a more challenging dataset, the model finds it easier to abandon its pre-trained knowledge in favor of optimizing self-consistency rather than genuinely learning to solve the
+      underlying task. We leverage this hypothesis to implement a curriculum learning strategy by identifying the ‘easiest’ subset of the DAPO dataset according to (a) the pass rate and (b) the frequency of the majority vote (see paper for more details).  </p>
+
+              <center>
+                <img src="./static/images/srt_curriculum.png"
+                  alt="srt_curriculum"
+                  width="100%"
+                  class="srt_curriculum"/>
+              </center>
+
+              Performance on
+      these curriculum subsets reaches levels comparable to standard RL training with ground-truth labels
+      on the entire DAPO dataset. These promising results suggest that curriculum strategies may further
+      extend the benefits of SRT, opening exciting avenues for future investigation.
+
+              <br><br>
+               -->
+        <hr>
+        <h2 class="title is-3" id="setup">Related Literature:</h2>
         <div class="content has-text-justified">
-        Thus, the optimal policy under this objective degenerates to producing the same answer regardless of input, maximizing reward artificially. 
-        Continued self-training on this proxy naturally drives the model toward this trivial solution, especially when it's simpler than solving the actual task.        </div>  
+          <p> Several works explore self-training LLMs, some of which are concurrent. A non-exaustive list includes:
+            <ul>
+              <li><a href="https://proceedings.neurips.cc/paper_files/paper/2022/hash/639a9a172c044fbb64175b5fad42e9a5-Abstract-Conference.html">Zeikerman et al. (2022)</a> and <a href="https://arxiv.org/abs/2210.11610">Huang et al (2022)</a>: demonstrates
+              that LLMs can self-improve by training on chain-of-thoughts from a previous instance of the model. Particularly, 
+              <a href="https://arxiv.org/abs/2210.11610" target="_blank">Huang et al., 2023</a>; 
+              <a href="https://arxiv.org/abs/2203.11171" target="_blank">Wang et al., 2023a</a>; 
+              <a href="https://arxiv.org/abs/2411.04109" target="_blank">Prasad et al., 2024</a> 
+              demonstrated the feasibility of using majority voting and self-consistency to filter
+              chain-of-thought traces that, when used as SFT training data, improve the LLM performance on
+              downstreaming tasks.</li>
+              <li><a href="https://arxiv.org/abs/2411.04109" target="_blank">TTRL (Zuo et al., 2025)</a>, 
+                proposes a test-time training algorithm, which is equivalent to SRT used at test time. 
+                </li>
+              <li>Similarly, <a href="https://arxiv.org/abs/2505.19590" target="_blank">Zhao et al., 2025</a> incorporates token certainty as a training signal.</li>
+              <li> 
+                <a href="https://github.com/ruixin31/Rethink_RLVR/blob/main/paper/rethink-rlvr.pdf" target="_blank">Shao et al., 2025</a> 
+                shows that RL with spurious reward can lead to a performance boost for some LLMs.
+              </li>
+            </ul>
+            
+          </p>          
 
-        <br><br>
-
-        <h2 class="title is-3" id="srt">(4) Mitigation Strategies can be Effective</h2>
-        <div class="content has-text-justified">
-
-<p>We propose strategies to mitigate reward hacking, laying the groundwork for effective future
-approaches to sustaining continual model improvement.</p>
-
-<br>
-
-<p><strong>(i) Early Stopping:</strong> A small validation set can reliably detect peak model performance and prevent collapse during self-training. 
-The peak performance occurs at nearly the same point for all heldout sets, so using any would be effective for early stopping.</p>
-
-        <center>
-          <img src="./static/images/srt_early_stopping.png"
-            alt="srt_early_stopping"
-            width="70%"
-            class="srt_early_stopping"/>
-        </center>
-
-        <br><br>
-
-<p><strong>(ii) Self-Training with Offline-Generated Labels:</strong> An effective approach involves generating pseudo-labels from a stable, previously
-fixed checkpoint, rather than leveraging labels from the evolving policy. Doing so stabilizes training while achieving performance comparable to SRT. </p>
-
-        <center>
-          <img src="./static/images/srt_offline_generated_data.png"
-            alt="srt_offline_generated_data"
-            width="100%"
-            class="srt_offline_generated_data"/>
-        </center>
-
-        <br><br>
-
-        <p><strong>(iii) Self-Training with Curriculum Learning:</strong> We hypothesize that model collapse occurs more rapidly when training on more challenging datasets, 
-a conjecture that aligns with our empirical findings. The intuition is that, on a more challenging dataset, the model finds it easier to abandon its pre-trained knowledge in favor of optimizing self-consistency rather than genuinely learning to solve the
-underlying task. We leverage this hypothesis to implement a curriculum learning strategy by identifying the ‘easiest’ subset of the DAPO dataset according to (a) the pass rate and (b) the frequency of the majority vote (see paper for more details).  </p>
-
-        <center>
-          <img src="./static/images/srt_curriculum.png"
-            alt="srt_curriculum"
-            width="100%"
-            class="srt_curriculum"/>
-        </center>
-
-        Performance on
-these curriculum subsets reaches levels comparable to standard RL training with ground-truth labels
-on the entire DAPO dataset. These promising results suggest that curriculum strategies may further
-extend the benefits of SRT, opening exciting avenues for future investigation.
-
-        <br><br>
-        
-  <hr>
-  <h2 class="title is-3" id="setup">Related Literature:</h2>
-  <div class="content has-text-justified">
-    <p> Several works explore self-training LLMs, some of which are concurrent. A non-exaustive list includes:
-      <ul>
-        <li><a href="https://proceedings.neurips.cc/paper_files/paper/2022/hash/639a9a172c044fbb64175b5fad42e9a5-Abstract-Conference.html">Zeikerman et al. (2022)</a> and <a href="https://arxiv.org/abs/2210.11610">Huang et al (2022)</a>: demonstrates
-        that LLMs can self-improve by training on chain-of-thoughts from a previous instance of the model. Particularly, 
-        <a href="https://arxiv.org/abs/2210.11610" target="_blank">Huang et al., 2023</a>; 
-        <a href="https://arxiv.org/abs/2203.11171" target="_blank">Wang et al., 2023a</a>; 
-        <a href="https://arxiv.org/abs/2411.04109" target="_blank">Prasad et al., 2024</a> 
-        demonstrated the feasibility of using majority voting and self-consistency to filter
-        chain-of-thought traces that, when used as SFT training data, improve the LLM performance on
-        downstreaming tasks.</li>
-        <li><a href="https://arxiv.org/abs/2411.04109" target="_blank">TTRL (Zuo et al., 2025)</a>, 
-          proposes a test-time training algorithm, which is equivalent to SRT used at test time. 
-          </li>
-        <li>Similarly, <a href="https://arxiv.org/abs/2505.19590" target="_blank">Zhao et al., 2025</a> incorporates token certainty as a training signal.</li>
-        <li> 
-          <a href="https://github.com/ruixin31/Rethink_RLVR/blob/main/paper/rethink-rlvr.pdf" target="_blank">Shao et al., 2025</a> 
-          shows that RL with spurious reward can lead to a performance boost for some LLMs.
-        </li>
-      </ul>
-      
-    </p>          
-
-  </div>
-</section>
-</div>
+        </div>
+      </section>
+      </div>
 
 <hr>
 
