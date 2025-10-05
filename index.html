@@ -35,26 +35,29 @@
       <div class="columns is-centered">
         <div class="column has-text-centered">
           <h1 class="title is-1 publication-title">Can Large Reasoning Models Self-Train?</h1>
+          
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://sheikhshafayat.github.io/">Sheikh Shafayat</a><sup>*</sup>,
+              <a href="https://sheikhshafayat.github.io/">Sheikh Shafayat</a><sup>1*</sup>,
             </span>
             <span class="author-block">
-              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>*</sup>,
+              <a href="https://tajwarfahim.github.io/">Fahim Tajwar</a><sup>2*</sup>,
             </span><br>
             <span class="author-block">
-              <a href="https://www.cs.cmu.edu/~rsalakhu/">Ruslan Salakhutdinov</a>,
+              <a href="https://www.cs.cmu.edu/~rsalakhu/">Ruslan Salakhutdinov</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a>,
+              <a href="https://www.cs.cmu.edu/~schneide/">Jeff Schneider</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://azanette.com">Andrea Zanette</a>
-            </span>                      
+              <a href="https://azanette.com">Andrea Zanette</a><sup>2</sup>
+            </span>
+          </div>
 
           <div class="is-size-5 publication-authors">
-            <span class="author-block">Carnegie Mellon University</span><br>
-            <span class="author-block"><sup>*</sup>Equal Contribution</span>
+            <span class="author-block"><sup>1</sup> KAIST</span>
+            <span class="author-block" style="margin-left: 1em;"><sup>2</sup> Carnegie Mellon University</span><br>
+            <span class="author-block"><sup>*</sup> Equal Contribution</span>
           </div>
 
           <div class="column has-text-centered">
@@ -102,16 +105,11 @@
       <div class="column is-full-width">
         <div class="content has-text-justified">
         <p>
-          Reinforcement learning from verifiable rewards significantly enhances large language models' (LLMs) reasoning abilities, notably in math and coding (<a href="https://arxiv.org/abs/2412.16720">OpenAI et al.</a>, <a href="https://arxiv.org/abs/2501.12948">DeepSeek-AI et al.</a>). 
-          However, it relies on human-created ground-truth verifiers, making it costly and restrictive to generate reward signals for every problem.
-          In this work, we ask the following questions:
-        </p>
-        <ul>
-          <li><b>(1)</b> Can reasoning models self-train using only their own feedback, without access to ground-truth labels?</li>
-          <li><b>(2)</b> Does self-training match the performance of RL training on ground-truth labels?</li>
-          <li><b>(3)</b> Can self-training be sustained indefinitely, or is improvement ultimately limited? </li>
-          <li><b>(4)</b> What strategies can effectively sustain model self-training? </li>
-        </ul>
+          In this work, we ask the following question: <b>can self-training — the process where a language model learns from its own judgments — can be sustained within a RL framework?</b> 
+          <br><br>
+          On a comprehensive set of experiments on both synthetic and real reasoning tasks, we find that this basic approach has the capability to improve not only the model's reasoning performance, but also its potential of <b>generating better quality feedback for the next RL iteration</b>, driving further model improvement. Yet our analysis also reveals a critical limitation of such a self-training paradigm — prolonged RL with self-reward leads to reward hacking where models learn to maximize training (pseudo-)reward, resulting in sudden performance collapse.
+          <br><br>
+          Together, these results highlight feedback design as the central challenge and call for future research on mechanisms to enable prolonged self-improvement.
          
         </div>
         
@@ -119,7 +117,8 @@
 
         <h2 class="title is-3" id="srt">(1) Self-Rewarded Training (SRT)</h2>
         <div class="content has-text-justified">
-            Motivated by prior works based on consistency based self-improvement, we introduce a simple yet effective self-training reinforcement learning methodology, Self-Rewarded Training, that uses consistency across multiple model-generated solutions to estimate correctness during RL training, providing self-supervision signals without labeled data.
+          In this work, we take the simplest possible self reward mechanism, majority voting, and experiment with a simple yet effective self-training method, titled Self-Rewarded Training (SRT). SRT uses consistency across multiple model-generated solutions to estimate correctness during RL training, providing self-supervision signals without labeled data.
+            <!-- Motivated by prior works based on consistency based self-improvement, we introduce a simple yet effective self-training reinforcement learning methodology, Self-Rewarded Training, that uses consistency across multiple model-generated solutions to estimate correctness during RL training, providing self-supervision signals without labeled data. -->
         </div>
 
         <!-- <center>
@@ -140,7 +139,30 @@
 
         <br><br>
 
-        <h2 class="title is-3" id="srt">(2) SRT Matches RL Performance at Early Training Stages</h2>
+        <h2 class="title is-3" id="srt">(2) Self Training Can Improve Both Performance <b>and</b> Feedback Quality</h2>
+        <div class="content has-text-justified">
+        
+      </div>
+
+        <!-- Interpolating. -->
+        <!-- <h3 class="title is-4">SRT leads to 100% relative improvement, but also suffers from performance collapse</h3> -->
+        
+        <center>
+          <img src="./static/images/reasoning_gym.png"
+            alt="Self training performance on reasoning gym datasets."
+            width="90%"
+            class="self_training_performance"/>
+        </center>
+
+        <div class="content has-text-justified">
+      We investigate self-training under controlled settings on synthetic reasoning tasks from Reasoning Gym. Remarkably, SRT improves not only the mean accuracy, but the majority voting accuracy as well, which is the source of our training supervision. Improvement in the quality of training signal drives further improvement in performance, as SRT outperforms its variant employing the majority votes from a fixed teacher as proxy labels.
+      <br><br>
+      To ensure the model understood the task and output format, we first trained it with RL using ground-truth data from the previous difficulty level before proceeding to label-free SRT training.
+      </div>
+        
+      <br><br>
+
+        <h2 class="title is-3" id="srt">(2) SRT Works on Real-World Reasoning Tasks</h2>
         <div class="content has-text-justified">
         We empirically demonstrate that at early training stages, SRT achieves performance rivaling standard reinforcement-learning methods trained explicitly on gold-standard answers.       
         Test datasets: AMC, AIME24, AIME25.
