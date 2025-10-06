@@ -234,17 +234,16 @@
         </center>
       <div class="content has-text-justified">
         
-        <strong>Manual inspection confirms this</strong>: after collapse, model outputs degenerate into random token sequences with a fixed, prompt-independent answer (e.g., '\boxed{1}'). 
+        <strong>Manual inspection confirms this</strong>: after collapse, model outputs degenerate into random token sequences with a fixed, prompt-independent answer (e.g., '\boxed{1}'). See examples below:
         <!-- There is a simple yet precise theoretical justification for this behavior:       -->
       </div>       
-
-      <!-- <div class="box" style="background-color:aliceblue">
-          <div class="content has-text-centered">
-        <p>
-          <b>The reinforcement learning optimization problem defined by the SRT objective<br>explicitly encourages consistency across outputs, independently of correctness.</b>
-        </p>
-          </div>
-      </div> -->
+      <center>
+          <img src="./static/images/reward_hacked_responses.png"
+            alt="reward_hacked_responses"
+            width="90%"
+            class="reward_hacked_responses"/>
+        </center>
+      
     
     <h2 class="title is-3" id="srt">Conclusion</h2>
     
@@ -265,58 +264,9 @@
         </p>
         </div>
     </div>
-    <!-- <h2 class="title is-3" id="srt">(4) Mitigation Strategies can be Effective</h2>
-    <div class="content has-text-justified">
-
-      <p>We propose strategies to mitigate reward hacking, laying the groundwork for effective future
-      approaches to sustaining continual model improvement.</p>
-
-      <br>
-
-      <p><strong>(i) Early Stopping:</strong> A small validation set can reliably detect peak model performance and prevent collapse during self-training. 
-      The peak performance occurs at nearly the same point for all heldout sets, so using any would be effective for early stopping.</p>
-
-              <center>
-                <img src="./static/images/srt_early_stopping.png"
-                  alt="srt_early_stopping"
-                  width="70%"
-                  class="srt_early_stopping"/>
-              </center>
-
-              <br><br>
-
-      <p><strong>(ii) Self-Training with Offline-Generated Labels:</strong> An effective approach involves generating pseudo-labels from a stable, previously
-      fixed checkpoint, rather than leveraging labels from the evolving policy. Doing so stabilizes training while achieving performance comparable to SRT. </p>
-
-              <center>
-                <img src="./static/images/srt_offline_generated_data.png"
-                  alt="srt_offline_generated_data"
-                  width="100%"
-                  class="srt_offline_generated_data"/>
-              </center>
-
-              <br><br>
-
-              <p><strong>(iii) Self-Training with Curriculum Learning:</strong> We hypothesize that model collapse occurs more rapidly when training on more challenging datasets, 
-      a conjecture that aligns with our empirical findings. The intuition is that, on a more challenging dataset, the model finds it easier to abandon its pre-trained knowledge in favor of optimizing self-consistency rather than genuinely learning to solve the
-      underlying task. We leverage this hypothesis to implement a curriculum learning strategy by identifying the ‘easiest’ subset of the DAPO dataset according to (a) the pass rate and (b) the frequency of the majority vote (see paper for more details).  </p>
-
-              <center>
-                <img src="./static/images/srt_curriculum.png"
-                  alt="srt_curriculum"
-                  width="100%"
-                  class="srt_curriculum"/>
-              </center>
-
-              Performance on
-      these curriculum subsets reaches levels comparable to standard RL training with ground-truth labels
-      on the entire DAPO dataset. These promising results suggest that curriculum strategies may further
-      extend the benefits of SRT, opening exciting avenues for future investigation.
-
-              <br><br>
-               -->
-        <hr>
-        <h2 class="title is-3" id="setup">Related Literature:</h2>
+    
+    <hr>
+      <h2 class="title is-3" id="setup">Related Literature:</h2>
         <div class="content has-text-justified">
           <p> Several works explore self-training LLMs, some of which are concurrent. A non-exaustive list includes:
             <ul>
@@ -345,8 +295,6 @@
       </div>
 
 <hr>
-
-
 
 
 <section class="section" id="BibTeX">
